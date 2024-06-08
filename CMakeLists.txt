@@ -3,7 +3,7 @@ project(university_management_system)
 
 # Add source files
 set(SOURCE_FILES main.c)
-set(MYSQL_LINK_FLAGS -L/usr/lib/aarch64-linux-gnu -lmysqlclient -lzstd -lssl -lcrypto -lresolv -lm)
+set(MYSQL_LINK_FLAGS -L/usr/lib/aarch64-linux-gnu -lmariadbclient -lzstd -lssl -lcrypto -lresolv -lm)
 
 # Add executable target
 add_executable(university_management_system ${SOURCE_FILES})

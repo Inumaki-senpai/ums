@@ -1,50 +1,50 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <mysql.h>
+#include <string.h>
+#include <mariadb/mysql.h>
 
+//  MARIADB CONSTANTS;
+#define SERVER "localhost"
+#define USER "meow"
+#define PASSWORD "MeowNagar.."
+#define DATABASE "ums"
+
+//  COLOR CODES;
+#define RED "\e[31m"
+#define YELLOW "\e[33m"
+#define GREEN "\e[32m"
+#define BOLD "\e[0;1m"
+#define RESET "\e[0m"
+
+//  MARIADB ERROR HANDLING;
 void finish_with_error(MYSQL *con){
     fprintf(stderr, "%s\n", mysql_error(con));
     mysql_close(con);
     exit(1);
 }
 
-int main(int argc, char const *argv[]){
-    MYSQL *con = mysql_init(NULL);
-
-    if (con == NULL){
-        fprintf(stderr, "mysql_init() failed\n");
-        exit(1);
+int main(int argc, char *argv[]) {
+    
+    //  MYSQL DB_CONNECTION(conn) INITIALIZE;
+    MYSQL *conn = mysql_init(NULL);
+    if(mysql_real_connect(conn, SERVER, USER, 
+                            PASSWORD, DATABASE, 0, NULL, 0) == NULL) {
+        finish_with_error(conn);
     }
 
-    if (mysql_real_connect(con, "172.17.0.3", "root", "root",
-                           "test", 0, NULL, 0) == NULL){
-        finish_with_error(con);
-    }
+    //  UNIVERSITY MANAGEMENT SYSTEM;
+    char uname[20], pswd[30];
 
-    if (mysql_query(con, "SELECT * FROM new_test")){
-        finish_with_error(con);
-    }
+    fprintf(stdout, BOLD RED"  ````  University Management System  ```` " YELLOW);
+    fprintf(stdout, "\n\nLogin to access management features..");
+    fprintf(stdout, "\nNote: "RESET" Username should not exceed 20 characters.\n    Password should not exceed 30 characters.\n   Do not use space in username.\n");
+    
+    fprintf(stdout, BOLD"\nUsername: "RESET);
+    fgets(uname, 20, stdin);
+    sscanf(uname, " %s", uname);
+    fprintf(stdout, BOLD"Password: "RESET);
+    fgets(pswd, 30, stdin);
 
-    MYSQL_RES *result = mysql_store_result(con);
-
-    if (result == NULL){
-        finish_with_error(con);
-    }
-
-    int num_fields = mysql_num_fields(result);
-
-    MYSQL_ROW row;
-
-    while ((row = mysql_fetch_row(result))){
-        for (int i = 0; i < num_fields; i++){
-            printf("%s ", row[i] ? row[i] : "NULL");
-        }
-
-        printf("\n");
-    }
-
-    mysql_free_result(result);
-    mysql_close(con);
-
-    exit(0);
+    mysql_close(conn);
+    return 0;
 }
