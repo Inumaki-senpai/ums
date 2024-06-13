@@ -2,14 +2,19 @@ cmake_minimum_required(VERSION 3.22)
 project(university_management_system)
 
 # Add source files
-set(SOURCE_FILES main.c)
+set(SOURCE_FILES main.c
+        src/home.c
+        src/login.c
+        src/admin.c
+        src/hashing.c
+        src/functions.c)
 set(MYSQL_LINK_FLAGS -L/usr/lib/aarch64-linux-gnu -lmariadbclient -lzstd -lssl -lcrypto -lresolv -lm)
 
 # Add executable target
 add_executable(university_management_system ${SOURCE_FILES})
 
 # Include directories if necessary
-include_directories(libs /usr/include/mysql)
+include_directories(libs /usr/include/mysql src/header)
 
 # add_library(logger libs/logger.c)
 
