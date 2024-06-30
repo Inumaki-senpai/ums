@@ -7,7 +7,11 @@ set(SOURCE_FILES main.c
         src/login.c
         src/admin.c
         src/hashing.c
-        src/functions.c)
+        src/functions.c
+        src/profile.c
+        src/library.c
+        src/header/library.h
+)
 set(MYSQL_LINK_FLAGS -L/usr/lib/aarch64-linux-gnu -lmariadbclient -lzstd -lssl -lcrypto -lresolv -lm)
 
 # Add executable target

@@ -8,7 +8,7 @@
 #include "admin.h"
 #include "home.h"
 
-//  DATABASE CONNECTION CONSTANTS;
+//  DATABASE CONSTANTS;
 #define SERVER "localhost"
 #define USER "meow"
 #define PASSWORD "MeowNagar.."
@@ -35,9 +35,12 @@ void main(void) {
 
     fprintf(stdout, BOLD"\nAlias: "RESET);
     fgets(alias, 26, stdin);
+    str_blank_error(conn, alias);
     sscanf(alias, " %s", alias);
+
     fprintf(stdout, BOLD"Password: "RESET);
     fgets(ukey, 31, stdin);
+    str_blank_error(conn, ukey);
     ukey[strlen(ukey)-1] = '\0';
 
     if(login(conn, alias, ukey))
@@ -45,7 +48,7 @@ void main(void) {
 
     fprintf(stdout, BOLD GREEN"Logged in successfully as %s..\n"RESET, alias);
     //  ADVANCE TO NEXT PAGE AS PER THE ROLE OF USER..
-    sprintf(query, "SELECT role_id FROM user WHERE alias = '%lu'", hash(alias));
+    sprintf(query, "SELECT role_id FROM account WHERE alias = '%lu'", hash(alias));
     if (mysql_query(conn, query))
         finish_with_error(conn);
 
@@ -53,37 +56,32 @@ void main(void) {
     if (result == NULL)
         finish_with_error(conn);
 
-    MYSQL_ROW row = mysql_fetch_row(result);
+    const MYSQL_ROW row = mysql_fetch_row(result);
     if (row == NULL)
         finish_with_error(conn);
 
     mysql_free_result(result);
     switch (atoi(row[0])) {
         case 7:
-            if(admin(conn))
-                finish_with_error(conn);
-        break;
+            while(!admin(conn)) {}
+            finish_with_error(conn);
         case 1:
-            if(management(conn))
-                finish_with_error(conn);
-        break;
+            while(!administration(conn, atoi(row[0]))) {}
+            finish_with_error(conn);
         case 2:
-            if(teacher(conn))
-                finish_with_error(conn);
-        break;
+            while (!teacher(conn)) {}
+            finish_with_error(conn);
         case 3:
-            if(staff(conn))
-                finish_with_error(conn);
-        break;
+            while(!student(conn)) {}
+            finish_with_error(conn);
         case 4:
-            if(student(conn))
-                finish_with_error(conn);
-        break;
+            while (!library(conn)) {}
+            finish_with_error(conn);
         default:
-            fprintf(stdout, RED"UNKNOWN ROLE_ID!\nTHIS ACCOUNT HAS BEEN CEASED TO EXIST..\n"RESET);
+            fprintf(stdout, RED"UNKNOWN ROLE_ID!\nTHIS ACCOUNT WAS NOT MEANT TO EXIST IN THE FIRST PLACE..\n"RESET);
             finish_with_error(conn);
     }
 
     mysql_close(conn);
-    exit(0);
+    exit(1);
 }

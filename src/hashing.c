@@ -1,4 +1,3 @@
-
 #include <string.h>
 #include "hashing.h"
 
@@ -22,7 +21,7 @@ unsigned long hash(const char *key) {
     value += count;
     value = value % TABLESIZE;
 
-#undef HASHMAX
+#undef TABLESIZE
 
     return value;
 }

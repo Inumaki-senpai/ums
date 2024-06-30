@@ -4,9 +4,9 @@
 
 int unenroll_user(MYSQL *conn);
 
-int management(MYSQL *conn);
+int administration(MYSQL *conn, int role);
 int teacher(MYSQL *conn);
-int staff(MYSQL *conn);
 int student(MYSQL *conn);
+int library(MYSQL *conn);
 
 #endif //HOME_H
